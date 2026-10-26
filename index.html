@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HÓA HỌC 12 - ÔN TẬP CHƯƠNG 1: BÀI 1 ĐẾN BÀI 3 (90 CÂU)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tích hợp KaTeX để render chuẩn xác các công thức trong cặp $...$ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+        body { font-family: 'Montserrat', sans-serif; }
+        .pulse-glow { animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 min-h-screen text-white flex flex-col items-center justify-between p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl text-center my-4">
+        <div class="inline-block bg-blue-600 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2 shadow-lg">
+            Trò Chơi Học Tập - Hóa học 12
+        </div>
+        <h1 class="text-xl md:text-3xl font-extrabold bg-gradient-to-r from-teal-200 via-blue-200 to-purple-200 bg-clip-text text-transparent">
+            ÔN TẬP CHƯƠNG 1: ESTER – LIPID (BÀI 1, 2, 3 - TỔNG 90 CÂU)
+        </h1>
+        <p class="text-slate-300 text-sm md:text-base mt-1">Sách Kết nối tri thức với cuộc sống</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 p-6 md:p-8 my-auto relative overflow-hidden">
+
+        <!-- SETUP SCREEN -->
+        <div id="setup-screen" class="space-y-6">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-teal-400 mb-2">Chọn Chế Độ Chơi</h2>
+                <p class="text-slate-300 text-sm">Bộ đề 90 câu chuẩn ma trận định dạng mới, công thức LaTeX chuẩn, có âm thanh phản hồi!</p>
+            </div>
+
+            <!-- Mode Selector Buttons -->
+            <div class="flex justify-center space-x-4">
+                <button id="btn-mode-group" onclick="setGameMode('group')" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-blue-600 text-white shadow-lg transition flex items-center space-x-2">
+                    <i class="fa-solid fa-users"></i> <span>Đấu Đội / Nhiều Người</span>
+                </button>
+                <button id="btn-mode-single" onclick="setGameMode('single')" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-700 text-slate-300 shadow-lg transition flex items-center space-x-2">
+                    <i class="fa-solid fa-user-graduate"></i> <span>Kiểm Tra Cá Nhân (Đấu đơn)</span>
+                </button>
+            </div>
+
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-4 max-w-md mx-auto">
+                <h3 id="setup-subtitle" class="text-center font-semibold text-teal-300 text-sm">Thiết lập thông tin các đội chơi</h3>
+                <div id="participant-inputs" class="space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                        <input type="text" value="Đội 1" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 font-semibold text-sm" placeholder="Nhập tên...">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                        <input type="text" value="Đội 2" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 font-semibold text-sm" placeholder="Nhập tên...">
+                    </div>
+                </div>
+
+                <div id="add-team-box" class="flex justify-center pt-2">
+                    <button onclick="addParticipantInput()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-semibold text-xs transition flex items-center space-x-1">
+                        <i class="fa-solid fa-plus"></i> <span id="add-btn-text">Thêm đội</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center pt-2">
+                <button onclick="startGame()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-lg px-8 py-3 rounded-xl shadow-lg transform transition hover:scale-105">
+                    Bắt Đầu Ngay (90 Câu)!
+                </button>
+            </div>
+        </div>
+
+        <!-- GAMEPLAY SCREEN -->
+        <div id="game-screen" class="hidden space-y-6">
+            <div class="flex flex-wrap justify-between items-center bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                    <span id="turn-label" class="text-xs uppercase tracking-wider text-slate-400">Thí sinh:</span>
+                    <span id="current-participant-badge" class="bg-blue-600 text-white font-bold px-3 py-1 rounded-full text-sm shadow">Bạn</span>
+                </div>
+                <div class="text-sm font-semibold text-teal-300">
+                    Câu hỏi <span id="current-q-num">1</span> / <span id="total-q-num">90</span>
+                </div>
+
+            </div>
+
+            <div id="scoreboard-mini" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center"></div>
+
+            <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-700 shadow-inner">
+                <div id="question-badge" class="inline-block text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-teal-800 text-teal-200 mb-2"></div>
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-white leading-relaxed"></h3>
+            </div>
+
+            <div id="options-container" class="space-y-4"></div>
+        </div>
+
+        <!-- FEEDBACK SCREEN -->
+        <div id="feedback-screen" class="hidden space-y-6 text-center py-4">
+            <div id="feedback-icon" class="text-6xl mb-2"></div>
+            <h3 id="feedback-title" class="text-2xl font-bold"></h3>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 text-left max-w-2xl mx-auto">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-1">Hướng dẫn giải thích đáp án:</p>
+                <p id="feedback-rationale" class="text-slate-200 text-sm md:text-base leading-relaxed"></p>
+            </div>
+            <div>
+                <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                    Tiếp Tục <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- END GAME SCREEN -->
+        <div id="end-screen" class="hidden space-y-6 text-center py-6">
+            <div class="text-6xl text-yellow-400 mb-2">
+                <i class="fa-solid fa-trophy animate-bounce"></i>
+            </div>
+            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500">
+                KẾT QUẢ BÀI THI TỔNG HỢP
+            </h2>
+            <p id="end-subtitle" class="text-slate-300">Đã hoàn thành toàn bộ 90 câu hỏi!</p>
+
+            <div id="final-scoreboard" class="max-w-md mx-auto space-y-3"></div>
+
+            <div class="pt-4">
+                <button onclick="restartGame()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                    Làm Lại Từ Đầu
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full max-w-4xl text-center text-xs text-slate-400 my-2">
+        Trò chơi học tập Hóa học 12 - Chương 1: Ester - Lipid (Sách Kết nối tri thức)
+    </footer>
+
+    <script>
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playCorrectSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99]; // Âm tươi sáng C5 - E5 - G5
+                notes.forEach((freq, index) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.1);
+                    gain.gain.setValueAtTime(0.18, now + index * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.1 + 0.28);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + index * 0.1);
+                    osc.stop(now + index * 0.1 + 0.28);
+                });
+            } catch (e) {
+                console.log("Audio error", e);
+            }
+        }
+
+        function playIncorrectSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const freqs = [174.61, 138.59]; // F3 -> C#3
+                freqs.forEach((freq, index) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.15);
+                    gain.gain.setValueAtTime(0.2, now + index * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.15 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + index * 0.15);
+                    osc.stop(now + index * 0.15 + 0.25);
+                });
+            } catch (e) {
+                console.log("Audio error", e);
+            }
+        }
+
+        function renderMath(container) {
+            if (window.renderMathInElement) {
+                renderMathInElement(container, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        const originalQuestions = [
+            // =========================================================================
+            // BÀI 1: ESTER - LIPID (30 CÂU)
+            // =========================================================================
+            // 20 CÂU TRẮC NGHIỆM (8 NB, 6 TH, 4 VD, 2 VDC)
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 1 [Bài 1 - NB]. Khi thay thế nhóm $-\\text{OH}$ ở nhóm carboxyl $(-\\text{COOH})$ của carboxylic acid bằng nhóm $-\\text{OR}'$ thì thu được hợp chất nào?",
+              options: [
+                  { text: "A. Ester", isCorrect: true },
+                  { text: "B. Alcohol", isCorrect: false },
+                  { text: "C. Aldehyde", isCorrect: false },
+                  { text: "D. Ether", isCorrect: false }
+              ],
+              rationale: "Khi thay thế nhóm $-\\text{OH}$ ở nhóm carboxyl bằng nhóm $-\\text{OR}'$ ($R'$ là gốc hydrocarbon) thì thu được ester." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 2 [Bài 1 - NB]. Công thức chung của ester no, đơn chức, mạch hở là gì?",
+              options: [
+                  { text: "A. $\\text{C}_n\\text{H}_{2n}\\text{O}_2\\;(n \\ge 2)$", isCorrect: true },
+                  { text: "B. $\\text{C}_n\\text{H}_{2n+2}\\text{O}_2\\;(n \\ge 1)$", isCorrect: false },
+                  { text: "C. $\\text{C}_n\\text{H}_{2n-2}\\text{O}_2\\;(n \\ge 4)$", isCorrect: false },
+                  { text: "D. $\\text{C}_n\\text{H}_{2n}\\text{O}\\;(n \\ge 1)$", isCorrect: false }
+              ],
+              rationale: "Ester no, đơn chức, mạch hở có công thức chung là $\\text{C}_n\\text{H}_{2n}\\text{O}_2\\;(n \\ge 2)$." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 3 [Bài 1 - NB]. Tên gọi của ester $\\text{CH}_3\\text{COOC}_2\\text{H}_5$ là gì?",
+              options: [
+                  { text: "A. Ethyl acetate", isCorrect: true },
+                  { text: "B. Methyl acetate", isCorrect: false },
+                  { text: "C. Ethyl formate", isCorrect: false },
+                  { text: "D. Propyl acetate", isCorrect: false }
+              ],
+              rationale: "Gốc $\\text{C}_2\\text{H}_5-$ là ethyl, $\\text{CH}_3\\text{COO}-$ là acetate nên tên gọi là ethyl acetate." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 4 [Bài 1 - NB]. Vì sao nhiệt độ sôi của các ester thấp hơn nhiều so với alcohol và carboxylic acid có phân tử khối tương đương?",
+              options: [
+                  { text: "A. Các phân tử ester không tạo được liên kết hydrogen liên phân tử với nhau", isCorrect: true },
+                  { text: "B. Do ester có khối lượng phân tử nhẹ hơn", isCorrect: false },
+                  { text: "C. Do ester không tan trong nước", isCorrect: false },
+                  { text: "D. Do ester chứa liên kết $\\pi$ phân cực", isCorrect: false }
+              ],
+              rationale: "Giữa các phân tử ester không có liên kết hydrogen liên phân tử nên nhiệt độ sôi thấp hơn nhiều." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 5 [Bài 1 - NB]. Chất béo là triester của carboxylic acid béo với hợp chất nào sau đây?",
+              options: [
+                  { text: "A. Glycerol $\\text{C}_3\\text{H}_5(\\text{OH})_3$", isCorrect: true },
+                  { text: "B. Ethylene glycol $\\text{C}_2\\text{H}_4(\\text{OH})_2$", isCorrect: false },
+                  { text: "C. Ethanol $\\text{C}_2\\text{H}_5\\text{OH}$", isCorrect: false },
+                  { text: "D. Methanol $\\text{CH}_3\\text{OH}$", isCorrect: false }
+              ],
+              rationale: "Chất béo (triglyceride) là triester của glycerol với các acid béo." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 6 [Bài 1 - NB]. Công thức phân tử của palmitic acid là gì?",
+              options: [
+                  { text: "A. $\\text{C}_{15}\\text{H}_{31}\\text{COOH}$", isCorrect: true },
+                  { text: "B. $\\text{C}_{17}\\text{H}_{35}\\text{COOH}$", isCorrect: false },
+                  { text: "C. $\\text{C}_{17}\\text{H}_{33}\\text{COOH}$", isCorrect: false },
+                  { text: "D. $\\text{C}_{17}\\text{H}_{31}\\text{COOH}$", isCorrect: false }
+              ],
+              rationale: "Palmitic acid là acid béo no có công thức $\\text{CH}_3[\\text{CH}_2]_{14}\\text{COOH}$ hay $\\text{C}_{15}\\text{H}_{31}\\text{COOH}$." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 7 [Bài 1 - NB]. Ở nhiệt độ phòng ($25^\\circ\\text{C}$), chất béo chứa nhiều gốc acid béo no thường tồn tại ở trạng thái nào?",
+              options: [
+                  { text: "A. Thể rắn (như mỡ lợn, mỡ bò)", isCorrect: true },
+                  { text: "B. Thể lỏng (như dầu lạc, dầu vừng)", isCorrect: false },
+                  { text: "C. Thể khí", isCorrect: false },
+                  { text: "D. Dung dịch keo", isCorrect: false }
+              ],
+              rationale: "Chất béo chứa nhiều gốc acid béo no có nhiệt độ nóng chảy cao nên ở thể rắn." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 8 [Bài 1 - NB]. Ester nào sau đây có mùi thơm đặc trưng của hoa nhài?",
+              options: [
+                  { text: "A. Benzyl acetate", isCorrect: true },
+                  { text: "B. Isoamyl acetate", isCorrect: false },
+                  { text: "C. Ethyl butyrate", isCorrect: false },
+                  { text: "D. Geranyl acetate", isCorrect: false }
+              ],
+              rationale: "Benzyl acetate ($\\text{CH}_3\\text{COOCH}_2\\text{C}_6\\text{H}_5$) có mùi thơm đặc trưng của hoa nhài." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 9 [Bài 1 - TH]. Số lượng đồng phân ester ứng với công thức phân tử $\\text{C}_4\\text{H}_8\\text{O}_2$ là bao nhiêu?",
+              options: [
+                  { text: "A. $4$ đồng phân", isCorrect: true },
+                  { text: "B. $2$ đồng phân", isCorrect: false },
+                  { text: "C. $3$ đồng phân", isCorrect: false },
+                  { text: "D. $5$ đồng phân", isCorrect: false }
+              ],
+              rationale: "$\\text{C}_4\\text{H}_8\\text{O}_2$ có $4$ đồng phân ester: $\\text{HCOOCH}_2\\text{CH}_2\\text{CH}_3$, $\\text{HCOOCH}(\\text{CH}_3)_2$, $\\text{CH}_3\\text{COOC}_2\\text{H}_5$, $\\text{C}_2\\text{H}_5\\text{COOCH}_3$." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 10 [Bài 1 - TH]. Phản ứng thủy phân ester trong môi trường kiềm (dung dịch $\\text{NaOH},\\;t^\\circ$) có đặc điểm nào sau đây?",
+              options: [
+                  { text: "A. Là phản ứng một chiều, còn được gọi là phản ứng xà phòng hóa", isCorrect: true },
+                  { text: "B. Là phản ứng thuận nghịch hai chiều", isCorrect: false },
+                  { text: "C. Tạo ra carboxylic acid tự do và alcohol", isCorrect: false },
+                  { text: "D. Chỉ xảy ra khi có ánh sáng mặt trời", isCorrect: false }
+              ],
+              rationale: "Thủy phân ester trong kiềm là phản ứng một chiều tạo muối carboxylate và alcohol." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 11 [Bài 1 - TH]. Khi đun nóng ethyl acetate với dung dịch $\\text{NaOH}$, thu được sản phẩm hữu cơ gồm:",
+              options: [
+                  { text: "A. $\\text{CH}_3\\text{COONa}$ và $\\text{C}_2\\text{H}_5\\text{OH}$", isCorrect: true },
+                  { text: "B. $\\text{HCOONa}$ và $\\text{C}_2\\text{H}_5\\text{OH}$", isCorrect: false },
+                  { text: "C. $\\text{CH}_3\\text{COOH}$ và $\\text{C}_2\\text{H}_5\\text{ONa}$", isCorrect: false },
+                  { text: "D. $\\text{C}_2\\text{H}_5\\text{COONa}$ và $\\text{CH}_3\\text{OH}$", isCorrect: false }
+              ],
+              rationale: "$\\text{CH}_3\\text{COOC}_2\\text{H}_5 + \\text{NaOH} \\xrightarrow{t^\\circ} \\text{CH}_3\\text{COONa} + \\text{C}_2\\text{H}_5\\text{OH}$." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 12 [Bài 1 - TH]. Hiện tượng dầu mỡ để lâu ngày trong không khí bị ôi thiu và có mùi khó chịu là do:",
+              options: [
+                  { text: "A. Các gốc acid béo không no bị oxi hóa chậm bởi oxygen không khí tạo thành peroxide rồi aldehyde", isCorrect: true },
+                  { text: "B. Dầu mỡ hòa tan vào hơi nước trong không khí", isCorrect: false },
+                  { text: "C. Dầu mỡ bay hơi hết phần lỏng", isCorrect: false },
+                  { text: "D. Dầu mỡ bị trùng hợp thành nhựa", isCorrect: false }
+              ],
+              rationale: "Liên kết đôi $\\text{C}=\\text{C}$ của acid béo không no bị oxi hóa chậm bởi oxygen tạo các hợp chất peroxide rồi phân hủy thành aldehyde có mùi khó chịu." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 13 [Bài 1 - TH]. Quá trình chuyển hóa dầu thực vật (chất béo lỏng) thành bơ nhân tạo (chất béo rắn) sử dụng phản ứng hóa học nào?",
+              options: [
+                  { text: "A. Phản ứng hydrogen hóa (cộng $\\text{H}_2$, xúc tác $\\text{Ni},\\;t^\\circ$)", isCorrect: true },
+                  { text: "B. Phản ứng xà phòng hóa", isCorrect: false },
+                  { text: "C. Phản ứng ester hóa", isCorrect: false },
+                  { text: "D. Phản ứng cracking nhiệt", isCorrect: false }
+              ],
+              rationale: "Hydrogen hóa biến gốc acid béo không no (lỏng) thành gốc no (rắn) để sản xuất bơ thực vật." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 14 [Bài 1 - TH]. Acid béo omega-3 và omega-6 có đặc điểm cấu tạo nào sau đây?",
+              options: [
+                  { text: "A. Là acid béo không no có liên kết đôi đầu tiên ở vị trí số $3$ và số $6$ khi đánh số từ nhóm methyl", isCorrect: true },
+                  { text: "B. Là acid béo no mạch nhánh", isCorrect: false },
+                  { text: "C. Là acid béo chứa vòng thơm", isCorrect: false },
+                  { text: "D. Là acid béo chỉ chứa $3$ nguyên tử carbon", isCorrect: false }
+              ],
+              rationale: "Omega-3 và omega-6 có liên kết đôi đầu tiên ở C số 3 và C số 6 tính từ đầu nhóm methyl ($-\\text{CH}_3$)." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 15 [Bài 1 - VD]. Thủy phân hoàn toàn $8,8\\text{ g}$ ethyl acetate bằng dung dịch $\\text{NaOH}$ dư, đun nóng. Khối lượng muối $\\text{CH}_3\\text{COONa}$ thu được là bao nhiêu?",
+              options: [
+                  { text: "A. $8,2\\text{ g}$", isCorrect: true },
+                  { text: "B. $6,8\\text{ g}$", isCorrect: false },
+                  { text: "C. $9,4\\text{ g}$", isCorrect: false },
+                  { text: "D. $7,4\\text{ g}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{ester}} = \\frac{8,8}{88} = 0,1\\text{ mol} \\implies m_{\\text{muối}} = 0,1 \\times 82 = 8,2\\text{ g}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 16 [Bài 1 - VD]. Xà phòng hóa hoàn toàn $8,9\\text{ g}$ tristearin $(\\text{C}_{17}\\text{H}_{35}\\text{COO})_3\\text{C}_3\\text{H}_5$ bằng dung dịch $\\text{NaOH}$ dư. Khối lượng glycerol thu được là bao nhiêu?",
+              options: [
+                  { text: "A. $0,92\\text{ g}$", isCorrect: true },
+                  { text: "B. $0,46\\text{ g}$", isCorrect: false },
+                  { text: "C. $1,84\\text{ g}$", isCorrect: false },
+                  { text: "D. $0,69\\text{ g}$", isCorrect: false }
+              ],
+              rationale: "$M(\\text{tristearin}) = 890\\text{ g/mol} \\implies n = \\frac{8,9}{890} = 0,01\\text{ mol} \\implies m_{\\text{glycerol}} = 0,01 \\times 92 = 0,92\\text{ g}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 17 [Bài 1 - VD]. Đun $12\\text{ g}$ acetic acid với $11,5\\text{ g}$ ethanol (xúc tác $\\text{H}_2\\text{SO}_4$ đặc, $t^\\circ$) thu được $11,44\\text{ g}$ ethyl acetate. Hiệu suất của phản ứng ester hóa là bao nhiêu?",
+              options: [
+                  { text: "A. $65\\%$", isCorrect: true },
+                  { text: "B. $60\\%$", isCorrect: false },
+                  { text: "C. $75\\%$", isCorrect: false },
+                  { text: "D. $80\\%$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{acid}} = 0,2\\text{ mol};\\;n_{\\text{alcohol}} = 0,25\\text{ mol} \\implies n_{\\text{lí thuyết}} = 0,2\\text{ mol} \\implies m_{\\text{lí thuyết}} = 0,2 \\times 88 = 17,6\\text{ g}$. $H = \\frac{11,44}{17,6} \\times 100\\% = 65\\%$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 18 [Bài 1 - VD]. Để hydrogen hóa hoàn toàn $0,1\\text{ mol}$ triolein $(\\text{C}_{17}\\text{H}_{33}\\text{COO})_3\\text{C}_3\\text{H}_5$ cần vừa đủ bao nhiêu lít khí $\\text{H}_2$ (đo ở đkc, $25^\\circ\\text{C},\\;1\\text{ bar}$)?",
+              options: [
+                  { text: "A. $7,437\\text{ lít}$", isCorrect: true },
+                  { text: "B. $2,479\\text{ lít}$", isCorrect: false },
+                  { text: "C. $4,958\\text{ lít}$", isCorrect: false },
+                  { text: "D. $6,720\\text{ lít}$", isCorrect: false }
+              ],
+              rationale: "Triolein có 3 gốc oleate chứa 3 liên kết $\\text{C}=\\text{C} \\implies n_{\\text{H}_2} = 3 \\times 0,1 = 0,3\\text{ mol} \\implies V = 0,3 \\times 24,79 = 7,437\\text{ lít}$." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 19 [Bài 1 - VDC]. Đốt cháy hoàn toàn $0,1\\text{ mol}$ một chất béo $X$ cần vừa đủ $7,75\\text{ mol}\\;\\text{O}_2$, thu được $5,5\\text{ mol}\\;\\text{CO}_2$ và $5,1\\text{ mol}\\;\\text{H}_2\\text{O}$. Số liên kết pi ($\\pi$) có trong phân tử chất béo $X$ là:",
+              options: [
+                  { text: "A. $5$", isCorrect: true },
+                  { text: "B. $6$", isCorrect: false },
+                  { text: "C. $7$", isCorrect: false },
+                  { text: "D. $8$", isCorrect: false }
+              ],
+              rationale: "Áp dụng công thức: $n_{\\text{CO}_2} - n_{\\text{H}_2\\text{O}} = (k - 1)n_X \\implies 5,5 - 5,1 = (k - 1) \\times 0,1 \\implies k - 1 = 4 \\implies k = 5$." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 20 [Bài 1 - VDC]. Thủy phân hoàn toàn $0,1\\text{ mol}$ ester $X$ mạch hở cần $0,2\\text{ mol}\\;\\text{NaOH}$, thu được muối của carboxylic acid và $9,2\\text{ g}$ một alcohol đơn chức. Công thức phân tử của $X$ là:",
+              options: [
+                  { text: "A. $\\text{C}_7\\text{H}_{12}\\text{O}_4$", isCorrect: true },
+                  { text: "B. $\\text{C}_4\\text{H}_6\\text{O}_4$", isCorrect: false },
+                  { text: "C. $\\text{C}_6\\text{H}_{10}\\text{O}_4$", isCorrect: false },
+                  { text: "D. $\\text{C}_8\\text{H}_{14}\\text{O}_4$", isCorrect: false }
+              ],
+              rationale: "Tỉ lệ mol $\\text{NaOH} : X = 2 : 1 \\implies$ ester hai chức tạo từ acid hai chức và alcohol đơn chức: $n_{\\text{alcohol}} = 0,2\\text{ mol} \\implies M_{\\text{alcohol}} = \\frac{9,2}{0,2} = 46\\text{ (C}_2\\text{H}_5\\text{OH)}$. Dạng $R(\\text{COOC}_2\\text{H}_5)_2$, nếu $R = -\\text{CH}_2- \\implies \\text{C}_7\\text{H}_{12}\\text{O}_4$." },
+
+            // 5 CÂU ĐÚNG / SAI BÀI 1 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'tf', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 21 [Bài 1 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Chất béo là triester của glycerol với các acid béo, còn được gọi chung là triglyceride.'?",
+              correctBool: true,
+              rationale: "Đúng. Đây là định nghĩa chuẩn mực của chất béo." },
+            { type: 'tf', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 22 [Bài 1 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Các ester đều tan vô hạn trong nước và có khối lượng riêng lớn hơn nước.'?",
+              correctBool: false,
+              rationale: "Sai. Ester thường nhẹ hơn nước và rất ít tan trong nước." },
+            { type: 'tf', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 23 [Bài 1 - TH - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Phản ứng thủy phân ester trong môi trường acid là phản ứng thuận nghịch hai chiều.'?",
+              correctBool: true,
+              rationale: "Đúng. Thủy phân có xúc tác acid vô cơ loãng và đun nóng là phản ứng thuận nghịch." },
+            { type: 'tf', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 24 [Bài 1 - VD - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Để điều chế ethyl acetate trong phòng thí nghiệm, người ta đun hỗn hợp acetic acid và ethanol với xúc tác dung dịch $\\text{NaOH}$ đặc.'?",
+              correctBool: false,
+              rationale: "Sai. Phản ứng ester hóa bắt buộc phải dùng xúc tác acid $\\text{H}_2\\text{SO}_4$ đặc." },
+            { type: 'tf', level: 'VDC', lesson: 'Bài 1: VDC - Đúng/Sai',
+              question: "Câu 25 [Bài 1 - VDC - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Khi xà phòng hóa hoàn toàn $1\\text{ mol}$ tristearin bằng dung dịch $\\text{NaOH}$ vừa đủ, khối lượng muối thu được lớn hơn khối lượng chất béo ban đầu đúng $28\\text{ gam}$.'?",
+              correctBool: true,
+              rationale: "Đúng. $\\Delta m = m_{\\text{NaOH}} - m_{\\text{glycerol}} = 3 \\times 40 - 92 = 28\\text{ gam}$." },
+
+            // 5 CÂU TRẢ LỜI NGẮN BÀI 1 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'sa', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 26 [Bài 1 - NB - Trả lời ngắn]. Số nguyên tử carbon trong một phân tử methyl acetate ($\\text{CH}_3\\text{COOCH}_3$) là bao nhiêu?",
+              correctAnswer: "3",
+              rationale: "$\\text{CH}_3\\text{COOCH}_3$ có đúng 3 nguyên tử carbon." },
+            { type: 'sa', level: 'NB', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 27 [Bài 1 - NB - Trả lời ngắn]. Số nhóm chức ester ($-\\text{COO}-$) trong một phân tử triglyceride (chất béo) là bao nhiêu?",
+              correctAnswer: "3",
+              rationale: "Chất béo là triester nên có đúng 3 nhóm chức ester." },
+            { type: 'sa', level: 'TH', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 28 [Bài 1 - TH - Trả lời ngắn]. Số liên kết đôi $\\text{C}=\\text{C}$ có trong một gốc oleate ($\\text{C}_{17}\\text{H}_{33}\\text{COO}-$) của oleic acid là bao nhiêu?",
+              correctAnswer: "1",
+              rationale: "Gốc oleate chỉ chứa 1 liên kết đôi $\\text{C}=\\text{C}$ ở dạng đồng phân cis." },
+            { type: 'sa', level: 'VD', lesson: 'Bài 1: Ester - Lipid',
+              question: "Câu 29 [Bài 1 - VD - Trả lời ngắn]. Xà phòng hóa hoàn toàn $0,05\\text{ mol}$ tripalmitin bằng dung dịch $\\text{NaOH}$ vừa đủ. Số mol glycerol thu được là bao nhiêu mol? (Nhập số thập phân dùng dấu phẩy)",
+              correctAnswer: "0,05",
+              rationale: "$1\\text{ mol}$ chất béo thủy phân tạo $1\\text{ mol}$ glycerol $\\implies n = 0,05\\text{ mol}$." },
+            { type: 'sa', level: 'VDC', lesson: 'Bài 1: VDC - Trả lời ngắn',
+              question: "Câu 30 [Bài 1 - VDC - Trả lời ngắn]. Đốt cháy hoàn toàn $0,1\\text{ mol}$ một ester no, đơn chức, mạch hở sinh ra $0,3\\text{ mol}\\;\\text{CO}_2$. Phân tử khối ($M$) của ester đó bằng bao nhiêu $\\text{amu}$?",
+              correctAnswer: "74",
+              rationale: "Số $\\text{C} = \\frac{0,3}{0,1} = 3 \\implies \\text{C}_3\\text{H}_6\\text{O}_2 \\implies M = 74\\text{ amu}$." },
+
+            // =========================================================================
+            // BÀI 2: XÀ PHÒNG VÀ CHẤT GIẶT RỬA (30 CÂU)
+            // =========================================================================
+            // 20 CÂU TRẮC NGHIỆM (8 NB, 6 TH, 4 VD, 2 VDC)
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 31 [Bài 2 - NB]. Thành phần chính của xà phòng thông thường là gì?",
+              options: [
+                  { text: "A. Muối sodium hoặc potassium của các acid béo", isCorrect: true },
+                  { text: "B. Hỗn hợp các ester của glycerol", isCorrect: false },
+                  { text: "C. Muối sodium alkylbenzene sulfonate", isCorrect: false },
+                  { text: "D. Dung dịch kiềm $\\text{NaOH}$ đặc", isCorrect: false }
+              ],
+              rationale: "Xà phòng là hỗn hợp muối sodium hoặc potassium của các acid béo và chất phụ gia." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 32 [Bài 2 - NB]. Chất nào sau đây là thành phần chính phổ biến trong bánh xà phòng?",
+              options: [
+                  { text: "A. Sodium stearate ($\\text{C}_{17}\\text{H}_{35}\\text{COONa}$)", isCorrect: true },
+                  { text: "B. Sodium chloride ($\\text{NaCl}$)", isCorrect: false },
+                  { text: "C. Calcium carbonate ($\\text{CaCO}_3$)", isCorrect: false },
+                  { text: "D. Ethyl acetate", isCorrect: false }
+              ],
+              rationale: "Muối sodium của palmitic acid hoặc stearic acid là thành phần chính của xà phòng bánh." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 33 [Bài 2 - NB]. Cấu tạo chung của phân tử chất hoạt động bề mặt trong xà phòng gồm hai phần là:",
+              options: [
+                  { text: "A. Đầu phân cực ưa nước và đuôi không phân cực kị nước", isCorrect: true },
+                  { text: "B. Hai đầu đều ưa nước", isCorrect: false },
+                  { text: "C. Hai đầu đều kị nước", isCorrect: false },
+                  { text: "D. Một đầu acid và một đầu base", isCorrect: false }
+              ],
+              rationale: "Phân tử xà phòng gồm đầu phân cực ưa nước ($-\\text{COO}^-\\text{Na}^+$) và đuôi kị nước (mạch hydrocarbon dài)." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 34 [Bài 2 - NB]. Nguồn nguyên liệu thiên nhiên nào sau đây được dân gian sử dụng làm chất giặt rửa tự nhiên?",
+              options: [
+                  { text: "A. Quả bồ kết, quả bồ hòn", isCorrect: true },
+                  { text: "B. Củ khoai tây", isCorrect: false },
+                  { text: "C. Quả dừa tươi", isCorrect: false },
+                  { text: "D. Quả chuối xanh", isCorrect: false }
+              ],
+              rationale: "Quả bồ kết, bồ hòn chứa hợp chất saponin có khả năng tạo bọt và giặt rửa tự nhiên." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 35 [Bài 2 - NB]. Chất giặt rửa tổng hợp thường là muối sodium của nhóm chức nào?",
+              options: [
+                  { text: "A. Nhóm alkylsulfate hoặc alkylbenzene sulfonate", isCorrect: true },
+                  { text: "B. Nhóm carboxylate acid béo", isCorrect: false },
+                  { text: "C. Nhóm amine bậc một", isCorrect: false },
+                  { text: "D. Nhóm phenolate", isCorrect: false }
+              ],
+              rationale: "Chất giặt rửa tổng hợp phổ biến là muối alkylsulfate ($R-\\text{OSO}_3\\text{Na}$) hoặc alkylbenzene sulfonate ($R-\\text{C}_6\\text{H}_4-\\text{SO}_3\\text{Na}$)." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 36 [Bài 2 - NB]. Nguồn nguyên liệu chính dùng để sản xuất chất giặt rửa tổng hợp trong công nghiệp là gì?",
+              options: [
+                  { text: "A. Dầu mỏ", isCorrect: true },
+                  { text: "B. Mỡ động vật", isCorrect: false },
+                  { text: "C. Dầu thực vật", isCorrect: false },
+                  { text: "D. Than bùn", isCorrect: false }
+              ],
+              rationale: "Chất giặt rửa tổng hợp được sản xuất từ hydrocarbon của dầu mỏ qua các phản ứng sunfua hóa/sunfonat hóa." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 37 [Bài 2 - NB]. Trong thí nghiệm xà phòng hóa chất béo, việc thêm dung dịch $\\text{NaCl}$ bão hòa vào cuối phản ứng nhằm mục đích gì?",
+              options: [
+                  { text: "A. Làm tăng khối lượng riêng của dung dịch để muối xà phòng dễ dàng nổi lên trên", isCorrect: true },
+                  { text: "B. Làm xúc tác cho phản ứng xà phòng hóa", isCorrect: false },
+                  { text: "C. Hòa tan hoàn toàn khối xà phòng", isCorrect: false },
+                  { text: "D. Khử màu cho xà phòng", isCorrect: false }
+              ],
+              rationale: "Dung dịch $\\text{NaCl}$ bão hòa làm tăng tỉ trọng pha lỏng và giảm độ tan của muối acid béo, giúp xà phòng tách ra nổi lên." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 38 [Bài 2 - NB]. Đuôi kị nước trong phân tử xà phòng sodium palmitate ($\\text{CH}_3[\\text{CH}_2]_{14}\\text{COONa}$) là phần nào?",
+              options: [
+                  { text: "A. Gốc hydrocarbon $\\text{CH}_3[\\text{CH}_2]_{14}- $", isCorrect: true },
+                  { text: "B. Nhóm $-\\text{COONa}$", isCorrect: false },
+                  { text: "C. Ion $\\text{Na}^+$", isCorrect: false },
+                  { text: "D. Cả phân tử xà phòng", isCorrect: false }
+              ],
+              rationale: "Gốc hydrocarbon dài không phân cực $\\text{CH}_3[\\text{CH}_2]_{14}- $ là phần đuôi kị nước." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 39 [Bài 2 - TH]. Cơ chế tẩy rửa của xà phòng diễn ra theo trình tự nào?",
+              options: [
+                  { text: "A. Đuôi kị nước thâm nhập vào vết bẩn dầu mỡ $\\to$ đầu ưa nước quay ra ngoài $\\to$ phân tán vết bẩn thành hạt nhỏ vào nước và bị rửa trôi", isCorrect: true },
+                  { text: "B. Đầu ưa nước hòa tan vết bẩn dầu mỡ trực tiếp", isCorrect: false },
+                  { text: "C. Xà phòng phản ứng cháy với dầu mỡ", isCorrect: false },
+                  { text: "D. Xà phòng làm đông cứng vết bẩn rồi cạo sạch", isCorrect: false }
+              ],
+              rationale: "Đuôi kị nước tan vào vết bẩn dầu mỡ, đầu ưa nước hướng ra ngoài giúp nhũ tương hóa phân tán vết bẩn vào dòng nước." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 40 [Bài 2 - TH]. Ưu điểm nổi bật của chất giặt rửa tổng hợp so với xà phòng truyền thống là gì?",
+              options: [
+                  { text: "A. Có thể sử dụng tốt trong nước cứng và môi trường acid", isCorrect: true },
+                  { text: "B. Dễ phân hủy sinh học trong tự nhiên hơn", isCorrect: false },
+                  { text: "C. Có thể ăn được an toàn", isCorrect: false },
+                  { text: "D. Không bao giờ gây kích ứng da tay", isCorrect: false }
+              ],
+              rationale: "Chất giặt rửa tổng hợp không tạo kết tủa với ion $\\text{Ca}^{2+},\\;\\text{Mg}^{2+}$ trong nước cứng nên vẫn tẩy rửa tốt." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 41 [Bài 2 - TH]. Nhược điểm lớn của xà phòng thông thường khi giặt rửa trong nước cứng (chứa nhiều $\\text{Ca}^{2+},\\;\\text{Mg}^{2+}$) là gì?",
+              options: [
+                  { text: "A. Tạo kết tủa không tan bám vào sợi vải và làm giảm bọt, giảm tác dụng giặt rửa", isCorrect: true },
+                  { text: "B. Làm rách mục vải ngay lập tức", isCorrect: false },
+                  { text: "C. Sinh ra khí độc hại", isCorrect: false },
+                  { text: "D. Làm nước sôi bùng lên", isCorrect: false }
+              ],
+              rationale: "$2R\\text{COO}^- + \\text{Ca}^{2+} \\to (R\\text{COO})_2\\text{Ca}\\downarrow$ tạo kết tủa bám vào vải làm hỏng vải và mất tác dụng xà phòng." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 42 [Bài 2 - TH]. Nhược điểm về mặt môi trường của một số chất giặt rửa tổng hợp có mạch carbon phân nhánh là:",
+              options: [
+                  { text: "A. Khó bị phân hủy sinh học bởi vi sinh vật, gây ô nhiễm nguồn nước", isCorrect: true },
+                  { text: "B. Làm nước ngọt hóa thành nước biển mặn", isCorrect: false },
+                  { text: "C. Gây ra hiện tượng mưa acid", isCorrect: false },
+                  { text: "D. Làm thủng tầng ozone", isCorrect: false }
+              ],
+              rationale: "Mạch carbon phân nhánh rất khó bị vi sinh vật phân hủy sinh học, tồn tại lâu làm nổi bọt ô nhiễm nguồn nước." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 43 [Bài 2 - TH]. Khi sản xuất xà phòng bằng phản ứng xà phòng hóa chất béo, sản phẩm phụ có giá trị cao thu được là gì?",
+              options: [
+                  { text: "A. Glycerol", isCorrect: true },
+                  { text: "B. Ethylene glycol", isCorrect: false },
+                  { text: "C. Ethanol", isCorrect: false },
+                  { text: "D. Methanol", isCorrect: false }
+              ],
+              rationale: "Thủy phân chất béo trong kiềm luôn tạo sản phẩm phụ là glycerol." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 44 [Bài 2 - TH]. Trong các chất sau, chất nào KHÔNG CÓ tác dụng giặt rửa bề mặt?",
+              options: [
+                  { text: "A. $\\text{CH}_3\\text{COONa}$", isCorrect: true },
+                  { text: "B. $\\text{C}_{17}\\text{H}_{35}\\text{COONa}$", isCorrect: false },
+                  { text: "C. $\\text{C}_{15}\\text{H}_{31}\\text{COOK}$", isCorrect: false },
+                  { text: "D. $\\text{CH}_3[\\text{CH}_2]_{10}\\text{CH}_2\\text{OSO}_3\\text{Na}$", isCorrect: false }
+              ],
+              rationale: "$\\text{CH}_3\\text{COONa}$ có mạch carbon quá ngắn, không có đuôi kị nước dài nên không có tính chất giặt rửa." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 45 [Bài 2 - VD]. Xà phòng hóa hoàn toàn $17,8\\text{ kg}$ tristearin bằng dung dịch $\\text{NaOH}$ đặc. Khối lượng muối sodium stearate thu được là bao nhiêu?",
+              options: [
+                  { text: "A. $18,36\\text{ kg}$", isCorrect: true },
+                  { text: "B. $15,25\\text{ kg}$", isCorrect: false },
+                  { text: "C. $20,40\\text{ kg}$", isCorrect: false },
+                  { text: "D. $12,24\\text{ kg}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{tristearin}} = \\frac{17,8}{890} = 0,02\\text{ kmol} \\implies n_{\\text{muối}} = 0,06\\text{ kmol} \\implies m = 0,06 \\times 306 = 18,36\\text{ kg}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 46 [Bài 2 - VD]. Để thu được $9,2\\text{ kg}$ glycerol từ phản ứng xà phòng hóa chất béo cần dùng vừa đủ bao nhiêu $\\text{kg}\\;\\text{NaOH}$ nguyên chất?",
+              options: [
+                  { text: "A. $12,0\\text{ kg}$", isCorrect: true },
+                  { text: "B. $4,0\\text{ kg}$", isCorrect: false },
+                  { text: "C. $8,0\\text{ kg}$", isCorrect: false },
+                  { text: "D. $6,0\\text{ kg}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{glycerol}} = \\frac{9,2}{92} = 0,1\\text{ kmol} \\implies n_{\\text{NaOH}} = 0,3\\text{ kmol} \\implies m = 0,3 \\times 40 = 12,0\\text{ kg}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 47 [Bài 2 - VD]. Một loại xà phòng chứa $70\\%$ sodium stearate về khối lượng. Từ $1\\text{ tấn}$ tristearin (hiệu suất phản ứng $90\\%$) có thể sản xuất được bao nhiêu $\\text{kg}$ bánh xà phòng loại trên?",
+              options: [
+                  { text: "A. $1326,2\\text{ kg}$", isCorrect: true },
+                  { text: "B. $1031,5\\text{ kg}$", isCorrect: false },
+                  { text: "C. $928,3\\text{ kg}$", isCorrect: false },
+                  { text: "D. $1473,5\\text{ kg}$", isCorrect: false }
+              ],
+              rationale: "$1000\\text{ kg}\\;\\text{tristearin} \\implies m_{\\text{muối lí thuyết}} = \\frac{1000}{890} \\times 3 \\times 306 = 1031,46\\text{ kg} \\implies m_{\\text{thực tế}} = 928,31\\text{ kg} \\implies m_{\\text{bánh}} = \\frac{928,31}{70\\%} \\approx 1326,2\\text{ kg}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 48 [Bài 2 - VD]. Khi hòa tan xà phòng vào nước, đại lượng vật lí nào của dung dịch bị giảm mạnh giúp thấm ướt vết bẩn nhanh chóng?",
+              options: [
+                  { text: "A. Sức căng bề mặt của nước", isCorrect: true },
+                  { text: "B. Khối lượng riêng của nước", isCorrect: false },
+                  { text: "C. Nhiệt độ của nước", isCorrect: false },
+                  { text: "D. Áp suất khí quyển", isCorrect: false }
+              ],
+              rationale: "Xà phòng là chất hoạt động bề mặt làm giảm sức căng bề mặt của nước, giúp nước dễ thấm ướt sợi vải và vết dầu mỡ." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 49 [Bài 2 - VDC]. Xà phòng hóa hoàn toàn $100\\text{ g}$ một mẫu chất béo có chỉ số acid bằng $7$ cần dùng vừa đủ $a\\text{ gam}\\;\\text{KOH}$. Biết để xà phòng hóa $100\\text{ g}$ chất béo trung tính tinh khiết cần $18\\text{ g}\\;\\text{KOH}$. Giá trị của $a$ là:",
+              options: [
+                  { text: "A. $18,70\\text{ g}$", isCorrect: true },
+                  { text: "B. $17,30\\text{ g}$", isCorrect: false },
+                  { text: "C. $19,40\\text{ g}$", isCorrect: false },
+                  { text: "D. $18,07\\text{ g}$", isCorrect: false }
+              ],
+              rationale: "Chỉ số acid $= 7 \\implies 1\\text{ g}$ chất béo cần $7\\text{ mg}\\;\\text{KOH} \\implies 100\\text{ g}$ cần $700\\text{ mg} = 0,7\\text{ g}\\;\\text{KOH}$. Tổng khối lượng $\\text{KOH} = 18 + 0,7 = 18,70\\text{ g}$." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 50 [Bài 2 - VDC]. Đun sôi $17,8\\text{ gam}$ một chất béo trung tính với $100\\text{ mL}$ dung dịch $\\text{NaOH}\\;1\\text{M}$. Để trung hòa lượng $\\text{NaOH}$ dư cần $40\\text{ mL}$ dung dịch $\\text{HCl}\\;1\\text{M}$. Khối lượng phân tử ($M$) của chất béo ban đầu là:",
+              options: [
+                  { text: "A. $890\\text{ amu}$", isCorrect: true },
+                  { text: "B. $884\\text{ amu}$", isCorrect: false },
+                  { text: "C. $806\\text{ amu}$", isCorrect: false },
+                  { text: "D. $886\\text{ amu}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{NaOH pư}} = 0,1 - 0,04 = 0,06\\text{ mol} \\implies n_{\\text{chất béo}} = \\frac{0,06}{3} = 0,02\\text{ mol} \\implies M = \\frac{17,8}{0,02} = 890\\text{ amu}$ (tristearin)." },
+
+            // 5 CÂU ĐÚNG / SAI BÀI 2 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'tf', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 51 [Bài 2 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Xà phòng là hỗn hợp muối sodium hoặc potassium của các acid béo kèm chất phụ gia.'?",
+              correctBool: true,
+              rationale: "Đúng. Đây là định nghĩa chuẩn mực của xà phòng." },
+            { type: 'tf', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 52 [Bài 2 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Nước giặt rửa tổng hợp và xà phòng đều có cùng bản chất hóa học là muối carboxylate của acid béo.'?",
+              correctBool: false,
+              rationale: "Sai. Chất giặt rửa tổng hợp là muối alkylsulfate hoặc alkylbenzene sulfonate, không phải muối carboxylate." },
+            { type: 'tf', level: 'TH', lesson: 'Bài 2: TH - Đúng/Sai',
+              question: "Câu 53 [Bài 2 - TH - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Trong cơ chế giặt rửa, đầu ưa nước thâm nhập vào giọt dầu mỡ còn đuôi kị nước hướng ra môi trường nước.'?",
+              correctBool: false,
+              rationale: "Sai. Đuôi kị nước (ưa dầu mỡ) cắm vào vết bẩn, còn đầu ưa nước quay ra ngoài môi trường nước." },
+            { type: 'tf', level: 'VD', lesson: 'Bài 2: VD - Đúng/Sai',
+              question: "Câu 54 [Bài 2 - VD - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Khi giặt bằng xà phòng thông thường trong nước cứng chứa nhiều ion $\\text{Ca}^{2+}$ và $\\text{Mg}^{2+}$ thì tác dụng giặt rửa bị giảm đáng kể do tạo kết tủa không tan.'?",
+              correctBool: true,
+              rationale: "Đúng. Ion $\\text{Ca}^{2+},\\;\\text{Mg}^{2+}$ tạo kết tủa không tan với gốc carboxylate làm mất bọt và bám bẩn lên sợi vải." },
+            { type: 'tf', level: 'VDC', lesson: 'Bài 2: VDC - Đúng/Sai',
+              question: "Câu 55 [Bài 2 - VDC - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Để hạn chế ô nhiễm nguồn nước, các nhà máy ưu tiên sản xuất các chất giặt rửa tổng hợp có mạch carbon thẳng không phân nhánh vì chúng dễ bị vi sinh vật phân hủy sinh học hơn loại có nhánh.'?",
+              correctBool: true,
+              rationale: "Đúng. Mạch carbon không phân nhánh dễ bị vi sinh vật phân hủy tự nhiên hơn chuỗi phân nhánh." },
+
+            // 5 CÂU TRẢ LỜI NGẮN BÀI 2 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'sa', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 56 [Bài 2 - NB - Trả lời ngắn]. Cần bao nhiêu mol $\\text{NaOH}$ để xà phòng hóa hoàn toàn $1\\text{ mol}$ chất béo triglyceride?",
+              correctAnswer: "3",
+              rationale: "Chất béo là triester nên phản ứng với $\\text{NaOH}$ theo tỉ lệ mol $1 : 3$." },
+            { type: 'sa', level: 'NB', lesson: 'Bài 2: Xà phòng & Chất giặt rửa',
+              question: "Câu 57 [Bài 2 - NB - Trả lời ngắn]. Số nguyên tử carbon trong phân tử sodium palmitate ($\\text{C}_{15}\\text{H}_{31}\\text{COONa}$) là bao nhiêu?",
+              correctAnswer: "16",
+              rationale: "15 C trong gốc alkyl + 1 C trong nhóm carboxylate = 16." },
+            { type: 'sa', level: 'TH', lesson: 'Bài 2: TH - Trả lời ngắn',
+              question: "Câu 58 [Bài 2 - TH - Trả lời ngắn]. Khối lượng phân tử của glycerol ($\\text{C}_3\\text{H}_8\\text{O}_3$) thu được sau phản ứng xà phòng hóa bằng bao nhiêu $\\text{amu}$?",
+              correctAnswer: "92",
+              rationale: "$M = 12 \\times 3 + 8 + 16 \\times 3 = 92\\text{ amu}$." },
+            { type: 'sa', level: 'VD', lesson: 'Bài 2: VD - Trả lời ngắn',
+              question: "Câu 59 [Bài 2 - VD - Trả lời ngắn]. Xà phòng hóa hoàn toàn $0,1\\text{ mol}$ tripalmitin cần vừa đủ bao nhiêu gam $\\text{NaOH}$?",
+              correctAnswer: "12",
+              rationale: "$n_{\\text{NaOH}} = 3 \\times 0,1 = 0,3\\text{ mol} \\implies m = 0,3 \\times 40 = 12\\text{ gam}$." },
+            { type: 'sa', level: 'VDC', lesson: 'Bài 2: VDC - Trả lời ngắn',
+              question: "Câu 60 [Bài 2 - VDC - Trả lời ngắn]. Xà phòng hóa hoàn toàn $10\\text{ gam}$ chất béo trung tính cần dùng vừa đủ $1,4\\text{ gam}\\;\\text{KOH}$. Chỉ số xà phòng hóa của mẫu chất béo trên bằng bao nhiêu?",
+              correctAnswer: "140",
+              rationale: "Chỉ số xà phòng hóa là số $\\text{mg}\\;\\text{KOH}$ cần để xà phòng hóa $1\\text{ g}$ chất béo $\\implies \\frac{1400\\text{ mg}}{10\\text{ g}} = 140$." },
+
+            // =========================================================================
+            // BÀI 3: ÔN TẬP CHƯƠNG 1 - ESTER VÀ LIPID (30 CÂU)
+            // =========================================================================
+            // 20 CÂU TRẮC NGHIỆM (8 NB, 6 TH, 4 VD, 2 VDC)
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 61 [Bài 3 - NB]. Tên gọi của ester $\\text{HCOOC}_2\\text{H}_5$ là gì?",
+              options: [
+                  { text: "A. Ethyl formate", isCorrect: true },
+                  { text: "B. Methyl formate", isCorrect: false },
+                  { text: "C. Ethyl acetate", isCorrect: false },
+                  { text: "D. Methyl acetate", isCorrect: false }
+              ],
+              rationale: "Gốc $\\text{C}_2\\text{H}_5-$ là ethyl, $\\text{HCOO}-$ là formate $\\implies$ ethyl formate." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 62 [Bài 3 - NB]. Thủy phân ester $\\text{CH}_3\\text{COOCH}_3$ trong dung dịch $\\text{NaOH}$ đun nóng thu được muối nào?",
+              options: [
+                  { text: "A. $\\text{CH}_3\\text{COONa}$", isCorrect: true },
+                  { text: "B. $\\text{HCOONa}$", isCorrect: false },
+                  { text: "C. $\\text{C}_2\\text{H}_5\\text{COONa}$", isCorrect: false },
+                  { text: "D. $\\text{CH}_3\\text{ONa}$", isCorrect: false }
+              ],
+              rationale: "$\\text{CH}_3\\text{COOCH}_3 + \\text{NaOH} \\xrightarrow{t^\\circ} \\text{CH}_3\\text{COONa} + \\text{CH}_3\\text{OH}$." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 63 [Bài 3 - NB]. Chất nào sau đây là chất béo không no ở thể lỏng ở nhiệt độ thường?",
+              options: [
+                  { text: "A. Triolein ($(\\text{C}_{17}\\text{H}_{33}\\text{COO})_3\\text{C}_3\\text{H}_5$)", isCorrect: true },
+                  { text: "B. Tristearin ($(\\text{C}_{17}\\text{H}_{35}\\text{COO})_3\\text{C}_3\\text{H}_5$)", isCorrect: false },
+                  { text: "C. Tripalmitin ($(\\text{C}_{15}\\text{H}_{31}\\text{COO})_3\\text{C}_3\\text{H}_5$)", isCorrect: false },
+                  { text: "D. Sáp ong", isCorrect: false }
+              ],
+              rationale: "Triolein chứa gốc acid oleic không no có liên kết đôi nên ở thể lỏng." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 64 [Bài 3 - NB]. Phản ứng hóa học nào sau đây là phản ứng thuận nghịch hai chiều?",
+              options: [
+                  { text: "A. Thủy phân ethyl acetate trong môi trường acid ($\\text{H}_2\\text{SO}_4$ loãng, đun nóng)", isCorrect: true },
+                  { text: "B. Thủy phân ethyl acetate trong dung dịch $\\text{NaOH}$", isCorrect: false },
+                  { text: "C. Phản ứng đốt cháy chất béo", isCorrect: false },
+                  { text: "D. Phản ứng xà phòng hóa tripalmitin", isCorrect: false }
+              ],
+              rationale: "Thủy phân ester có xúc tác acid vô cơ loãng là phản ứng thuận nghịch." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 65 [Bài 3 - NB]. Trong cơ thể người, chất béo có vai trò quan trọng nào sau đây?",
+              options: [
+                  { text: "A. Là nguồn cung cấp và dự trữ năng lượng lớn, hòa tan các vitamin $\\text{A, D, E, K}$", isCorrect: true },
+                  { text: "B. Trực tiếp tổng hợp nên tinh bột", isCorrect: false },
+                  { text: "C. Hòa tan kim loại nặng để đào thải", isCorrect: false },
+                  { text: "D. Vận chuyển khí oxygen trong máu", isCorrect: false }
+              ],
+              rationale: "Chất béo cung cấp năng lượng gấp đôi carbohydrate và là dung môi hòa tan các vitamin $\\text{A, D, E, K}$." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 66 [Bài 3 - NB]. Hợp chất $\\text{C}_{17}\\text{H}_{33}\\text{COOK}$ thuộc loại chất nào sau đây?",
+              options: [
+                  { text: "A. Xà phòng", isCorrect: true },
+                  { text: "B. Chất giặt rửa tổng hợp", isCorrect: false },
+                  { text: "C. Chất béo triglyceride", isCorrect: false },
+                  { text: "D. Carboxylic acid tự do", isCorrect: false }
+              ],
+              rationale: "$\\text{C}_{17}\\text{H}_{33}\\text{COOK}$ là muối potassium của oleic acid, là một loại xà phòng." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 67 [Bài 3 - NB]. Ester nào sau đây được dùng để sản xuất thủy tinh hữu cơ plexiglas (poly(methyl methacrylate))?",
+              options: [
+                  { text: "A. Methyl methacrylate", isCorrect: true },
+                  { text: "B. Ethyl acetate", isCorrect: false },
+                  { text: "C. Vinyl acetate", isCorrect: false },
+                  { text: "D. Methyl formate", isCorrect: false }
+              ],
+              rationale: "Trùng hợp methyl methacrylate tạo poly(methyl methacrylate) dùng làm thủy tinh hữu cơ." },
+            { type: 'mcq', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 68 [Bài 3 - NB]. Thuốc giảm đau hạ sốt Aspirin (acetylsalicylic acid) chứa nhóm chức nào sau đây?",
+              options: [
+                  { text: "A. Nhóm chức ester và nhóm chức carboxylic acid", isCorrect: true },
+                  { text: "B. Nhóm chức ketone và alcohol", isCorrect: false },
+                  { text: "C. Nhóm chức amine và amide", isCorrect: false },
+                  { text: "D. Nhóm chức aldehyde đơn thuần", isCorrect: false }
+              ],
+              rationale: "Aspirin có cấu tạo $\\text{CH}_3\\text{COO}-\\text{C}_6\\text{H}_4-\\text{COOH}$ chứa đồng thời nhóm ester và nhóm carboxyl." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 69 [Bài 3 - TH]. Ester $X$ có mùi táo đặc trưng và có công thức phân tử $\\text{C}_5\\text{H}_{10}\\text{O}_2$. Khi thủy phân $X$ trong dung dịch $\\text{NaOH}$ thu được sodium butanoate và một alcohol. Công thức của $X$ là:",
+              options: [
+                  { text: "A. $\\text{CH}_3\\text{CH}_2\\text{CH}_2\\text{COOCH}_3$", isCorrect: true },
+                  { text: "B. $\\text{CH}_3\\text{COOCH}_2\\text{CH}_2\\text{CH}_3$", isCorrect: false },
+                  { text: "C. $\\text{HCOOCH}_2\\text{CH}_2\\text{CH}_2\\text{CH}_3$", isCorrect: false },
+                  { text: "D. $\\text{CH}_3\\text{CH}_2\\text{COOC}_2\\text{H}_5$", isCorrect: false }
+              ],
+              rationale: "Muối sodium butanoate là $\\text{CH}_3\\text{CH}_2\\text{CH}_2\\text{COONa} \\implies$ ester ban đầu là $\\text{CH}_3\\text{CH}_2\\text{CH}_2\\text{COOCH}_3$ (methyl butanoate)." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 70 [Bài 3 - TH]. Dãy gồm các chất được sắp xếp theo chiều nhiệt độ sôi TĂNG DẦN là:",
+              options: [
+                  { text: "A. $\\text{HCOOCH}_3 < \\text{C}_2\\text{H}_5\\text{OH} < \\text{CH}_3\\text{COOH}$", isCorrect: true },
+                  { text: "B. $\\text{CH}_3\\text{COOH} < \\text{C}_2\\text{H}_5\\text{OH} < \\text{HCOOCH}_3$", isCorrect: false },
+                  { text: "C. $\\text{C}_2\\text{H}_5\\text{OH} < \\text{HCOOCH}_3 < \\text{CH}_3\\text{COOH}$", isCorrect: false },
+                  { text: "D. $\\text{HCOOCH}_3 < \\text{CH}_3\\text{COOH} < \\text{C}_2\\text{H}_5\\text{OH}$", isCorrect: false }
+              ],
+              rationale: "Ester không có liên kết hydrogen ($32^\\circ\\text{C}$) < alcohol có liên kết H ($78,3^\\circ\\text{C}$) < acid có liên kết H đôi bền vững ($118^\\circ\\text{C}$)." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 71 [Bài 3 - TH]. Thủy phân hoàn toàn vinyl acetate ($\\text{CH}_3\\text{COOCH}=\\text{CH}_2$) trong dung dịch $\\text{NaOH}$ đun nóng thu được:",
+              options: [
+                  { text: "A. Muối $\\text{CH}_3\\text{COONa}$ và aldehyde $\\text{CH}_3\\text{CHO}$", isCorrect: true },
+                  { text: "B. Muối $\\text{CH}_3\\text{COONa}$ và alcohol $\\text{CH}_2=\\text{CH}-\\text{OH}$", isCorrect: false },
+                  { text: "C. Muối $\\text{CH}_2=\\text{CHCOONa}$ và alcohol $\\text{CH}_3\\text{OH}$", isCorrect: false },
+                  { text: "D. Muối $\\text{CH}_3\\text{COONa}$ và ketone $\\text{CH}_3\\text{COCH}_3$", isCorrect: false }
+              ],
+              rationale: "Alcohol có nhóm -OH gắn vào carbon không no chuyển vị thành aldehyde: $\\text{CH}_3\\text{COOCH}=\\text{CH}_2 + \\text{NaOH} \\to \\text{CH}_3\\text{COONa} + \\text{CH}_3\\text{CHO}$." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 72 [Bài 3 - TH]. Cho các chất sau: (1) $\\text{C}_{15}\\text{H}_{31}\\text{COONa}$; (2) $\\text{CH}_3[\\text{CH}_2]_{11}\\text{OSO}_3\\text{Na}$; (3) $\\text{C}_{17}\\text{H}_{35}\\text{COOK}$; (4) $\\text{CH}_3[\\text{CH}_2]_{11}\\text{C}_6\\text{H}_4\\text{SO}_3\\text{Na}$. Nhóm các chất giặt rửa tổng hợp là:",
+              options: [
+                  { text: "A. (2) và (4)", isCorrect: true },
+                  { text: "B. (1) và (3)", isCorrect: false },
+                  { text: "C. (1) và (2)", isCorrect: false },
+                  { text: "D. (3) và (4)", isCorrect: false }
+              ],
+              rationale: "(1) và (3) là xà phòng (muối acid béo); (2) và (4) là chất giặt rửa tổng hợp gốc sulfate và sulfonate." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 73 [Bài 3 - TH]. Khi xà phòng hóa hoàn toàn $m\\text{ gam}$ một triglyceride bằng dung dịch $\\text{NaOH}$ vừa đủ, hệ thức liên hệ số mol nào sau đây luôn đúng?",
+              options: [
+                  { text: "A. $n_{\\text{NaOH}} = 3 \\times n_{\\text{glycerol}}$", isCorrect: true },
+                  { text: "B. $n_{\\text{NaOH}} = n_{\\text{glycerol}}$", isCorrect: false },
+                  { text: "C. $n_{\\text{chất béo}} = 3 \\times n_{\\text{NaOH}}$", isCorrect: false },
+                  { text: "D. $m_{\\text{chất béo}} = m_{\\text{muối}}$", isCorrect: false }
+              ],
+              rationale: "Cứ 1 phân tử triglyceride phản ứng với 3 phân tử $\\text{NaOH}$ sinh ra 1 phân tử glycerol $\\implies n_{\\text{NaOH}} = 3 \\times n_{\\text{glycerol}}$." },
+            { type: 'mcq', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 74 [Bài 3 - TH]. Cho các phát biểu sau: (1) Thủy phân ester trong acid luôn là phản ứng thuận nghịch; (2) Chất béo nhẹ hơn nước và không tan trong nước; (3) Mỡ động vật chứa chủ yếu acid béo không no; (4) Xà phòng dùng tốt trong nước cứng. Số phát biểu ĐÚNG là:",
+              options: [
+                  { text: "A. 2 phát biểu ((1) và (2))", isCorrect: true },
+                  { text: "B. 3 phát biểu", isCorrect: false },
+                  { text: "C. 4 phát biểu", isCorrect: false },
+                  { text: "D. 1 phát biểu", isCorrect: false }
+              ],
+              rationale: "(1) và (2) đúng. (3) sai vì mỡ động vật chứa nhiều acid béo no; (4) sai vì xà phòng bị kết tủa trong nước cứng." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 75 [Bài 3 - VD]. Thủy phân hoàn toàn $7,4\\text{ gam}$ ester $\\text{HCOOC}_2\\text{H}_5$ bằng $150\\text{ mL}$ dung dịch $\\text{NaOH}\\;1\\text{M}$. Sau phản ứng, cô cạn dung dịch thu được bao nhiêu gam chất rắn khan?",
+              options: [
+                  { text: "A. $8,8\\text{ g}$", isCorrect: true },
+                  { text: "B. $6,8\\text{ g}$", isCorrect: false },
+                  { text: "C. $10,8\\text{ g}$", isCorrect: false },
+                  { text: "D. $7,4\\text{ g}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{ester}} = 0,1\\text{ mol};\\;n_{\\text{NaOH}} = 0,15\\text{ mol} \\implies \\text{NaOH}$ dư $0,05\\text{ mol}$. $m_{\\text{rắn}} = m_{\\text{HCOONa}} + m_{\\text{NaOH dư}} = 0,1 \\times 68 + 0,05 \\times 40 = 8,8\\text{ gam}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 76 [Bài 3 - VD]. Đốt cháy hoàn toàn $0,15\\text{ mol}$ methyl acetate ($\\text{C}_3\\text{H}_6\\text{O}_2$) thu được thể tích khí $\\text{CO}_2$ (đo ở đkc, $25^\\circ\\text{C},\\;1\\text{ bar}$) là bao nhiêu?",
+              options: [
+                  { text: "A. $11,1555\\text{ lít}$", isCorrect: true },
+                  { text: "B. $7,4370\\text{ lít}$", isCorrect: false },
+                  { text: "C. $9,9160\\text{ lít}$", isCorrect: false },
+                  { text: "D. $14,8740\\text{ lít}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{CO}_2} = 3 \\times 0,15 = 0,45\\text{ mol} \\implies V = 0,45 \\times 24,79 = 11,1555\\text{ lít}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 77 [Bài 3 - VD]. Để xà phòng hóa hoàn toàn $44,5\\text{ kg}$ tristearin cần dùng vừa đủ $m\\text{ kg}$ dung dịch $\\text{NaOH}\\;20\\%$. Giá trị của $m$ là:",
+              options: [
+                  { text: "A. $30,0\\text{ kg}$", isCorrect: true },
+                  { text: "B. $6,0\\text{ kg}$", isCorrect: false },
+                  { text: "C. $15,0\\text{ kg}$", isCorrect: false },
+                  { text: "D. $24,0\\text{ kg}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{tristearin}} = \\frac{44,5}{890} = 0,05\\text{ kmol} \\implies n_{\\text{NaOH}} = 0,15\\text{ kmol} \\implies m_{\\text{chất tan}} = 0,15 \\times 40 = 6\\text{ kg} \\implies m_{\\text{dd}} = \\frac{6}{20\\%} = 30\\text{ kg}$." },
+            { type: 'mcq', level: 'VD', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 78 [Bài 3 - VD]. Cho $0,1\\text{ mol}$ phenyl acetate ($\\text{CH}_3\\text{COOC}_6\\text{H}_5$) tác dụng tối đa với dung dịch $\\text{NaOH}$ dư, đun nóng. Số mol $\\text{NaOH}$ đã tham gia phản ứng là:",
+              options: [
+                  { text: "A. $0,2\\text{ mol}$", isCorrect: true },
+                  { text: "B. $0,1\\text{ mol}$", isCorrect: false },
+                  { text: "C. $0,3\\text{ mol}$", isCorrect: false },
+                  { text: "D. $0,4\\text{ mol}$", isCorrect: false }
+              ],
+              rationale: "$\\text{CH}_3\\text{COOC}_6\\text{H}_5$ là ester của phenol phản ứng với $\\text{NaOH}$ theo tỉ lệ mol $1 : 2$ tạo $\\text{CH}_3\\text{COONa} + \\text{C}_6\\text{H}_5\\text{ONa} + \\text{H}_2\\text{O}$." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 79 [Bài 3 - VDC]. Đun sôi hỗn hợp gồm $0,2\\text{ mol}\\;\\text{CH}_3\\text{COOH}$ và $0,2\\text{ mol}\\;\\text{C}_2\\text{H}_5\\text{OH}$ (xúc tác $\\text{H}_2\\text{SO}_4$ đặc). Khi phản ứng đạt cân bằng thu được $0,132\\text{ mol}$ ethyl acetate. Hằng số cân bằng $K_C$ của phản ứng ester hóa này là:",
+              options: [
+                  { text: "A. $3,77$", isCorrect: true },
+                  { text: "B. $4,00$", isCorrect: false },
+                  { text: "C. $2,25$", isCorrect: false },
+                  { text: "D. $1,85$", isCorrect: false }
+              ],
+              rationale: "Tại cân bằng: $[\\text{ester}] = [\\text{H}_2\\text{O}] = 0,132\\text{ M};\\;[\\text{acid}] = [\\text{alcohol}] = 0,2 - 0,132 = 0,068\\text{ M} \\implies K_C = \\frac{0,132^2}{0,068^2} \\approx 3,77$." },
+            { type: 'mcq', level: 'VDC', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 80 [Bài 3 - VDC]. Thủy phân hoàn toàn $m\\text{ gam}$ một triglyceride $X$ cần vừa đủ $12\\text{ gam}\\;\\text{NaOH}$, thu được glycerol và hỗn hợp muối gồm sodium palmitate và sodium oleate theo tỉ lệ mol $1 : 2$. Giá trị của $m$ là:",
+              options: [
+                  { text: "A. $86,2\\text{ gam}$", isCorrect: true },
+                  { text: "B. $89,0\\text{ gam}$", isCorrect: false },
+                  { text: "C. $88,4\\text{ gam}$", isCorrect: false },
+                  { text: "D. $85,8\\text{ gam}$", isCorrect: false }
+              ],
+              rationale: "$n_{\\text{NaOH}} = 0,3\\text{ mol} \\implies n_X = 0,1\\text{ mol}$. $X$ có công thức $(\\text{C}_{15}\\text{H}_{31}\\text{COO})(\\text{C}_{17}\\text{H}_{33}\\text{COO})_2\\text{C}_3\\text{H}_5\\;(M = 862\\text{ g/mol}) \\implies m = 0,1 \\times 862 = 86,2\\text{ gam}$." },
+
+            // 5 CÂU ĐÚNG / SAI BÀI 3 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'tf', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 81 [Bài 3 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Dầu ăn thực vật và mỡ lợn có thành phần hóa học chính đều là các chất béo triglyceride.'?",
+              correctBool: true,
+              rationale: "Đúng. Cả dầu thực vật và mỡ động vật đều có thành phần chính là các triester triglyceride." },
+            { type: 'tf', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 82 [Bài 3 - NB - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Phản ứng xà phòng hóa chất béo trong dung dịch kiềm đun nóng là phản ứng thuận nghịch hai chiều.'?",
+              correctBool: false,
+              rationale: "Sai. Phản ứng xà phòng hóa chất béo trong môi trường kiềm là phản ứng một chiều." },
+            { type: 'tf', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 83 [Bài 3 - TH - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Mỡ bôi trơn máy móc động cơ xe máy có cùng bản chất hóa học với mỡ động vật ăn được.'?",
+              correctBool: false,
+              rationale: "Sai. Mỡ bôi trơn máy móc là hỗn hợp hydrocarbon từ dầu mỏ; mỡ động vật là chất béo ester." },
+            { type: 'tf', level: 'VD', lesson: 'Bài 3: VD - Đúng/Sai',
+              question: "Câu 84 [Bài 3 - VD - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Để phân biệt hai chất lỏng không màu gồm ethyl acetate và acetic acid có thể dùng mẩu quỳ tím ẩm.'?",
+              correctBool: true,
+              rationale: "Đúng. Acetic acid làm đỏ quỳ tím ẩm; ethyl acetate không làm đổi màu quỳ tím." },
+            { type: 'tf', level: 'VDC', lesson: 'Bài 3: VDC - Đúng/Sai',
+              question: "Câu 85 [Bài 3 - VDC - Đúng/Sai]. Nhận định sau là Đúng hay Sai: 'Đốt cháy hoàn toàn một ester no, đơn chức, mạch hở bất kì luôn thu được số mol $\\text{CO}_2$ bằng số mol $\\text{H}_2\\text{O}$.'?",
+              correctBool: true,
+              rationale: "Đúng. Ester no đơn chức mạch hở $\\text{C}_n\\text{H}_{2n}\\text{O}_2$ khi đốt cháy luôn cho $n_{\\text{CO}_2} = n_{\\text{H}_2\\text{O}}$." },
+
+            // 5 CÂU TRẢ LỜI NGẮN BÀI 3 (2 NB, 1 TH, 1 VD, 1 VDC)
+            { type: 'sa', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 86 [Bài 3 - NB - Trả lời ngắn]. Số nguyên tử oxygen có trong một phân tử chất béo triglyceride là bao nhiêu?",
+              correctAnswer: "6",
+              rationale: "Chất béo là triester chứa 3 nhóm $-\\text{COO}-$ nên có đúng 6 nguyên tử oxygen." },
+            { type: 'sa', level: 'NB', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 87 [Bài 3 - NB - Trả lời ngắn]. Khối lượng phân tử của ester methyl formate ($\\text{HCOOCH}_3$) bằng bao nhiêu $\\text{amu}$?",
+              correctAnswer: "60",
+              rationale: "$M = 1 + 12 + 16 \\times 2 + 15 = 60\\text{ amu}$." },
+            { type: 'sa', level: 'TH', lesson: 'Bài 3: Ôn tập Chương 1',
+              question: "Câu 88 [Bài 3 - TH - Trả lời ngắn]. Công thức phân tử $\\text{C}_3\\text{H}_6\\text{O}_2$ có bao nhiêu đồng phân cấu tạo thuộc loại ester?",
+              correctAnswer: "2",
+              rationale: "Có 2 đồng phân ester: $\\text{HCOOC}_2\\text{H}_5$ và $\\text{CH}_3\\text{COOCH}_3$." },
+            { type: 'sa', level: 'VD', lesson: 'Bài 3: VD - Trả lời ngắn',
+              question: "Câu 89 [Bài 3 - VD - Trả lời ngắn]. Thủy phân hoàn toàn $0,2\\text{ mol}$ methyl acetate cần vừa đủ bao nhiêu gam $\\text{NaOH}$?",
+              correctAnswer: "8",
+              rationale: "$n_{\\text{NaOH}} = n_{\\text{ester}} = 0,2\\text{ mol} \\implies m = 0,2 \\times 40 = 8\\text{ gam}$." },
+            { type: 'sa', level: 'VDC', lesson: 'Bài 3: VDC - Trả lời ngắn',
+              question: "Câu 90 [Bài 3 - VDC - Trả lời ngắn]. Thủy phân hoàn toàn $m\\text{ gam}$ triolein thu được $4,6\\text{ gam}$ glycerol. Giá trị của $m$ là bao nhiêu gam? ($M_{\\text{triolein}} = 884\\text{ g/mol}$, nhập số thập phân dùng dấu phẩy)",
+              correctAnswer: "44,2",
+              rationale: "$n_{\\text{glycerol}} = \\frac{4,6}{92} = 0,05\\text{ mol} \\implies n_{\\text{triolein}} = 0,05\\text{ mol} \\implies m = 0,05 \\times 884 = 44,2\\text{ gam}$." }
+        ];
+
+        let questions = [];
+        let participants = [];
+        let gameMode = 'group';
+        let currentIndex = 0;
+        let currentQuestionIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 50;
+
+        function setGameMode(mode) {
+            gameMode = mode;
+            const btnGroup = document.getElementById('btn-mode-group');
+            const btnSingle = document.getElementById('btn-mode-single');
+            const subtitle = document.getElementById('setup-subtitle');
+            const container = document.getElementById('participant-inputs');
+            const addTeamBox = document.getElementById('add-team-box');
+
+            if (mode === 'group') {
+                btnGroup.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-blue-600 text-white shadow-lg transition flex items-center space-x-2";
+                btnSingle.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-700 text-slate-300 shadow-lg transition flex items-center space-x-2";
+                subtitle.innerText = "Thiết lập thông tin các đội chơi";
+                addTeamBox.style.display = 'flex';
+                container.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                        <input type="text" value="Đội 1" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 font-semibold text-sm" placeholder="Nhập tên...">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                        <input type="text" value="Đội 2" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 font-semibold text-sm" placeholder="Nhập tên...">
+                    </div>
+                `;
+            } else {
+                btnSingle.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-teal-600 text-white shadow-lg transition flex items-center space-x-2";
+                btnGroup.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-700 text-slate-300 shadow-lg transition flex items-center space-x-2";
+                subtitle.innerText = "Nhập họ và tên học sinh làm bài";
+                addTeamBox.style.display = 'none';
+                container.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-teal-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" value="Nguyễn Văn A" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-teal-500 font-semibold text-sm" placeholder="Họ và tên của bạn...">
+                    </div>
+                `;
+            }
+        }
+
+        function addParticipantInput() {
+            const container = document.getElementById('participant-inputs');
+            const count = container.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'flex items-center space-x-2';
+            const colorClass = count % 2 === 0 ? 'bg-purple-600' : 'bg-blue-600';
+            div.innerHTML = `
+                <span class="${colorClass} w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">${count}</span>
+                <input type="text" value="Đội ${count}" class="participant-input w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 font-semibold text-sm" placeholder="Nhập tên...">
+                <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300 px-2"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function startGame() {
+            getAudioContext();
+
+            const inputs = document.querySelectorAll('.participant-input');
+            participants = [];
+            inputs.forEach((input, index) => {
+                const name = input.value.trim() || (gameMode === 'group' ? `Đội ${index + 1}` : `Học sinh`);
+                participants.push({ name: name, score: 0, correctCount: 0 });
+            });
+
+            if (participants.length === 0) {
+                alert("Vui lòng nhập tên người làm bài!");
+                return;
+            }
+
+            // Giữ nguyên thứ tự câu hỏi theo bộ đề gốc.
+            questions = [...originalQuestions];
+
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('total-q-num').innerText = questions.length;
+            
+            if (gameMode === 'single') {
+                document.getElementById('turn-label').innerText = 'Học sinh:';
+            } else {
+                document.getElementById('turn-label').innerText = 'Lượt của:';
+            }
+
+            currentIndex = 0;
+            currentQuestionIndex = 0;
+            loadQuestion();
+        }
+
+        function updateScoreboardMini() {
+            const container = document.getElementById('scoreboard-mini');
+            container.innerHTML = '';
+            
+            if (gameMode === 'single') {
+                container.style.display = 'none';
+                document.getElementById('current-participant-badge').innerText = participants[0].name;
+            } else {
+                container.style.display = 'grid';
+                participants.forEach((p, idx) => {
+                    const isCurrent = idx === currentIndex;
+                    const div = document.createElement('div');
+                    div.className = `p-2 rounded-lg border ${isCurrent ? 'border-teal-400 bg-teal-950/40 pulse-glow' : 'border-slate-700 bg-slate-900/40'}`;
+                    div.innerHTML = `
+                        <div class="text-xs text-slate-300 truncate font-semibold">${p.name}</div>
+                        <div class="text-lg font-extrabold text-teal-300">${p.score} đ</div>
+                    `;
+                    container.appendChild(div);
+                });
+                document.getElementById('current-participant-badge').innerText = participants[currentIndex].name;
+            }
+        }
+
+        function loadQuestion() {
+            clearInterval(timerInterval);
+
+            const q = questions[currentQuestionIndex];
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerHTML = q.question;
+
+            const typeText = q.type === 'mcq' ? 'Trắc nghiệm 4 lựa chọn' : q.type === 'tf' ? 'Câu hỏi Đúng / Sai' : 'Câu hỏi Trả lời ngắn';
+            document.getElementById('question-badge').innerText = `${q.lesson} • Cấp độ: ${q.level} • ${typeText}`;
+
+            updateScoreboardMini();
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            if (q.type === 'mcq') {
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+
+                let currentOptions = [...q.options].sort(() => Math.random() - 0.5);
+                const letters = ['A', 'B', 'C', 'D'];
+
+                currentOptions.forEach((opt, idx) => {
+                    const cleanText = opt.text.replace(/^[A-D]\.\s*/, '');
+                    const btn = document.createElement('button');
+                    btn.className = 'bg-slate-900/90 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 p-4 rounded-xl text-left transition flex items-start space-x-3 group shadow';
+                    
+                    btn.innerHTML = `
+                        <span class="bg-slate-800 text-teal-400 font-bold px-2.5 py-1 rounded-lg text-sm shrink-0">${letters[idx]}</span>
+                        <span class="text-slate-100 font-medium text-sm md:text-base my-auto">${cleanText}</span>
+                    `;
+
+                    btn.onclick = () => selectAnswer(opt.isCorrect, q.rationale);
+                    gridDiv.appendChild(btn);
+                });
+                optionsContainer.appendChild(gridDiv);
+            } else if (q.type === 'tf') {
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto pt-2';
+
+                const btnTrue = document.createElement('button');
+                btnTrue.className = 'bg-emerald-900/80 hover:bg-emerald-700 border border-emerald-500 p-5 rounded-2xl text-center font-bold text-xl transition shadow-lg flex items-center justify-center space-x-3';
+                btnTrue.innerHTML = `<i class="fa-solid fa-check text-2xl text-emerald-400"></i> <span>ĐÚNG</span>`;
+                btnTrue.onclick = () => selectAnswer(q.correctBool === true, q.rationale);
+
+                const btnFalse = document.createElement('button');
+                btnFalse.className = 'bg-red-900/80 hover:bg-red-700 border border-red-500 p-5 rounded-2xl text-center font-bold text-xl transition shadow-lg flex items-center justify-center space-x-3';
+                btnFalse.innerHTML = `<i class="fa-solid fa-xmark text-2xl text-red-400"></i> <span>SAI</span>`;
+                btnFalse.onclick = () => selectAnswer(q.correctBool === false, q.rationale);
+
+                gridDiv.appendChild(btnTrue);
+                gridDiv.appendChild(btnFalse);
+                optionsContainer.appendChild(gridDiv);
+            } else if (q.type === 'sa') {
+                const boxDiv = document.createElement('div');
+                boxDiv.className = 'max-w-md mx-auto space-y-4 pt-2 text-center';
+                boxDiv.innerHTML = `
+                    <div class="text-xs text-slate-400">Nhập đáp án (chữ số, từ khóa hoặc số thập phân) rồi nhấn Xác nhận:</div>
+                    <div class="flex space-x-2">
+                        <input id="sa-input" type="text" class="w-full bg-slate-900 border border-teal-500 rounded-xl px-4 py-3 text-white text-center font-bold text-lg focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Nhập câu trả lời...">
+                        <button id="sa-submit-btn" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-6 py-3 rounded-xl shadow transition">Gửi</button>
+                    </div>
+                `;
+                optionsContainer.appendChild(boxDiv);
+
+                const inputEl = document.getElementById('sa-input');
+                const submitBtn = document.getElementById('sa-submit-btn');
+
+                const handleSaSubmit = () => {
+                    const userAns = inputEl.value.trim().toLowerCase().replace(/\s+/g, '').replace(',', '.');
+                    const targetAns = q.correctAnswer.trim().toLowerCase().replace(/\s+/g, '').replace(',', '.');
+                    const isCorrect = (userAns === targetAns);
+                    selectAnswer(isCorrect, `${q.rationale} (Đáp án chuẩn: <b>${q.correctAnswer}</b>)`);
+                };
+
+                submitBtn.onclick = handleSaSubmit;
+                inputEl.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') handleSaSubmit();
+                });
+                setTimeout(() => inputEl.focus(), 100);
+            }
+
+            renderMath(document.getElementById('game-screen'));
+
+            // Không giới hạn thời gian trả lời câu hỏi.
+        }
+
+        function selectAnswer(isCorrect, rationaleText) {
+            clearInterval(timerInterval);
+
+            document.getElementById('game-screen').classList.add('hidden');
+            const feedbackScreen = document.getElementById('feedback-screen');
+            feedbackScreen.classList.remove('hidden');
+
+            const title = document.getElementById('feedback-title');
+            const icon = document.getElementById('feedback-icon');
+            const rationale = document.getElementById('feedback-rationale');
+
+            if (isCorrect) {
+                playCorrectSound();
+                participants[currentIndex].score += 10;
+                participants[currentIndex].correctCount++;
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+                title.innerText = gameMode === 'single' ? "Chính Xác! (+10 điểm)" : `${participants[currentIndex].name} Trả Lời Chính Xác! (+10 điểm)`;
+                title.className = "text-2xl font-bold text-emerald-400";
+            } else {
+                playIncorrectSound();
+                if (gameMode === 'group') {
+                    participants[currentIndex].score = Math.max(0, participants[currentIndex].score - 5);
+                }
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-400"></i>';
+                title.innerText = gameMode === 'single' ? "Chưa Chính Xác!" : `${participants[currentIndex].name} Chưa Chính Xác! (-5 điểm)`;
+                title.className = "text-2xl font-bold text-red-400";
+            }
+
+            rationale.innerHTML = rationaleText;
+            renderMath(feedbackScreen);
+        }
+
+        function handleTimeOut(rationaleText) {
+            playIncorrectSound();
+            if (gameMode === 'group') {
+                participants[currentIndex].score = Math.max(0, participants[currentIndex].score - 5);
+            }
+
+            document.getElementById('game-screen').classList.add('hidden');
+            const feedbackScreen = document.getElementById('feedback-screen');
+            feedbackScreen.classList.remove('hidden');
+
+            document.getElementById('feedback-icon').innerHTML = '<i class="fa-solid fa-clock text-amber-400"></i>';
+            document.getElementById('feedback-title').innerText = gameMode === 'single' ? "Hết Giờ!" : `Hết Giờ! (${participants[currentIndex].name})`;
+            document.getElementById('feedback-title').className = "text-2xl font-bold text-amber-400";
+            document.getElementById('feedback-rationale').innerHTML = rationaleText;
+            renderMath(feedbackScreen);
+        }
+
+        function nextQuestion() {
+            if (gameMode === 'group') {
+                currentIndex = (currentIndex + 1) % participants.length;
+            }
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById('feedback-screen').classList.add('hidden');
+                document.getElementById('game-screen').classList.remove('hidden');
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+
+            const container = document.getElementById('final-scoreboard');
+            container.innerHTML = '';
+
+            if (gameMode === 'single') {
+                const student = participants[0];
+                document.getElementById('end-subtitle').innerText = `Học sinh: ${student.name}`;
+                
+                const score10 = ((student.correctCount / questions.length) * 10).toFixed(1);
+
+                const div = document.createElement('div');
+                div.className = 'bg-slate-900 border border-teal-500 p-6 rounded-2xl space-y-3 text-center';
+                div.innerHTML = `
+                    <div class="text-slate-400 text-sm">Tổng số câu đúng: <b class="text-white">${student.correctCount} / ${questions.length}</b></div>
+                    <div class="text-4xl font-extrabold text-teal-300">${score10} <span class="text-xl font-bold text-slate-300">/ 10 Điểm</span></div>
+                    <div class="text-xs text-slate-400 pt-2">${Number(score10) >= 8 ? '🌟 Xuất sắc! Bạn nắm rất vững toàn diện kiến thức Chương 1 Ester - Lipid.' : Number(score10) >= 5 ? '👍 Khá tốt! Hãy ôn luyện thêm các câu hỏi vận dụng chuyên sâu nhé.' : '📖 Cần cố gắng ôn lại lý thuyết các Bài 1, 2, 3 nhé!'}</div>
+                `;
+                container.appendChild(div);
+            } else {
+                document.getElementById('end-subtitle').innerText = "Trò chơi đã kết thúc! Tổng kết điểm số các đội chơi.";
+                const sortedList = [...participants].sort((a, b) => b.score - a.score);
+                sortedList.forEach((p, idx) => {
+                    const div = document.createElement('div');
+                    div.className = `flex justify-between items-center p-4 rounded-xl border ${idx === 0 ? 'bg-amber-500/20 border-amber-400 text-amber-300 font-bold' : 'bg-slate-900 border-slate-700 text-white'}`;
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full flex items-center justify-center font-bold ${idx === 0 ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'}">${idx + 1}</span>
+                            <span>${p.name}</span>
+                        </div>
+                        <span class="text-xl font-extrabold">${p.score} điểm</span>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            confetti({
+                particleCount: 160,
+                spread: 85,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function restartGame() {
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMath(document.body);
+        });
+    </script>
+</body>
+</html>
